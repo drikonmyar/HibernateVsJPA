@@ -9,6 +9,7 @@ import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class Main {
     public static void main(String[] args) {
@@ -22,8 +23,18 @@ public class Main {
 
         // JPA
 //        callJPA(s1);
-        jpaUsingNativeQuery();
+//        jpaUsingNativeQuery();
+        jpaUsingNativeQueryReturningPartialInfo();
 
+    }
+
+    private static void jpaUsingNativeQueryReturningPartialInfo() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+        EntityManager em = emf.createEntityManager();
+        List<Object[]> resultList = em.createNativeQuery("select snake_name, food from snake_data where food = :food").setParameter("food", "Human").getResultList();
+        List<SnakeDTO> listOfSnakeDTOs = resultList.stream().map(row -> new SnakeDTO((String)row[0], (String)row[1])).collect(Collectors.toList());
+        System.out.println(listOfSnakeDTOs);
+        em.close();
     }
 
     private static void jpaUsingNativeQuery(){
