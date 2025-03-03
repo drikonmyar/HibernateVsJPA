@@ -2,7 +2,6 @@ package org.example;
 
 import jakarta.persistence.*;
 import lombok.Data;
-import lombok.Generated;
 
 @Entity
 @Table(name = "snake_data")
@@ -16,5 +15,7 @@ public class Snake {
     @Column(name = "snake_name")
     private String sname;
     private String food;
+    @Column(nullable = true)
+    private int category;
 
 }

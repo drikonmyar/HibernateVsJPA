@@ -24,8 +24,18 @@ public class Main {
         // JPA
 //        callJPA(s1);
 //        jpaUsingNativeQuery();
-        jpaUsingNativeQueryReturningPartialInfo();
+//        jpaUsingNativeQueryReturningPartialInfo();
+        jpaUsingJoining2Tables();
 
+    }
+
+    private static void jpaUsingJoining2Tables() {
+        EntityManagerFactory emf = Persistence.createEntityManagerFactory("pu");
+        EntityManager em = emf.createEntityManager();
+        List<Object[]> resultList = em.createNativeQuery("select s.snake_name, c.cname from snake_data s inner join category c on s.category = c.cid").getResultList();
+        List<SnakeWithCategoryDTO> listOfSnakeWithCategoryDTOs = resultList.stream().map(row -> new SnakeWithCategoryDTO((String)row[0], (String)row[1])).collect(Collectors.toList());
+        System.out.println(listOfSnakeWithCategoryDTOs);
+        em.close();
     }
 
     private static void jpaUsingNativeQueryReturningPartialInfo() {
